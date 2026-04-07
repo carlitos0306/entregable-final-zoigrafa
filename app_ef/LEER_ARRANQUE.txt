@@ -1,0 +1,11 @@
+Para arrancar el proyecto en la máquina virtual y permitir conexiones externas:
+
+Abrir terminal en la carpeta app_ef.
+
+Ejecutar: bin/cake server -H 0.0.0.0
+
+Ingresar desde el navegador a http://172.25.0.214:8765/
+
+
+Atributo agregado a la tabla users
+ALTER TABLE users ADD COLUMN telefono VARCHAR(20) AFTER correo;

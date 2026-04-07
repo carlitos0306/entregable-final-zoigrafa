@@ -1,0 +1,11 @@
+msgid "Submit"
+msgstr "Guardar"
+
+msgid "List Productos"
+msgstr "Lista de Productos"
+
+msgid "Add Producto"
+msgstr "Añadir Producto"
+
+msgid "Actions"
+msgstr "Acciones"

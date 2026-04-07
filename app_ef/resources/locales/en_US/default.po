@@ -1,0 +1,32 @@
+msgid "Ingreso a Zoigrafa - Ingrese su correo y contraseña"
+msgstr "Login to Zoigrafa - Enter your email and password"
+
+msgid "Catálogo de Productos - Zoigrafa"
+msgstr "Product Catalog - Zoigrafa"
+
+msgid "Nuevo Producto"
+msgstr "New Product"
+
+msgid "Buscar"
+msgstr "Search"
+
+msgid "Limpiar"
+msgstr "Clear"
+
+msgid "Acciones"
+msgstr "Actions"
+
+msgid "Ver"
+msgstr "View"
+
+msgid "Editar"
+msgstr "Edit"
+
+msgid "Eliminar"
+msgstr "Delete"
+
+msgid "El producto se guardó correctamente en Zoigrafa."
+msgstr "The product was successfully saved in Zoigrafa."
+
+msgid "Producto eliminado del catálogo."
+msgstr "Product deleted from the catalog."
