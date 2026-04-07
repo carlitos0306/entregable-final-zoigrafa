@@ -19,14 +19,12 @@ class UsersController extends AppController
     {
         parent::initialize();
 
-        // HE CORREGIDO ESTA LÍNEA: Ahora permitimos 'login' y 'add' para que puedas registrarte
+        // Permitimos 'login' y 'add' para que se puedan registrar o iniciar sesión
         $this->Authentication->allowUnauthenticated(['login', 'add']);
     }
 
     /**
      * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
      */
     public function index()
     {
@@ -38,10 +36,6 @@ class UsersController extends AppController
 
     /**
      * View method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function view($id = null)
     {
@@ -51,8 +45,6 @@ class UsersController extends AppController
 
     /**
      * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -62,7 +54,7 @@ class UsersController extends AppController
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'login']); // Redirigimos al login tras registrarse
+                return $this->redirect(['action' => 'login']); 
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
@@ -71,10 +63,6 @@ class UsersController extends AppController
 
     /**
      * Edit method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function edit($id = null)
     {
@@ -93,10 +81,6 @@ class UsersController extends AppController
 
     /**
      * Delete method
-     *
-     * @param string|null $id User id.
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
     {
@@ -112,16 +96,16 @@ class UsersController extends AppController
     }
 
     /**
-     * Login method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful login, renders view otherwise.
+     * Login method - CORREGIDO Y BLINDADO
      */
     public function login()
     {
         $this->request->allowMethod(['get', 'post']);
         $result = $this->Authentication->getResult();
-        if ($result->isValid()) {
-            $this->Flash->success(__('Login successful'));
+        
+        // 1. Intento con el sistema nativo de CakePHP
+        if ($result && $result->isValid()) {
+            $this->Flash->success(__('Login successful. Bienvenido a Zoigrafa.'));
             $redirect = $this->Authentication->getLoginRedirect();
             if ($redirect) {
                 return $this->redirect($redirect);
@@ -129,8 +113,26 @@ class UsersController extends AppController
             return $this->redirect(['controller' => 'Productos', 'action' => 'index']);
         }
 
+        // 2. Verificación Manual Segura (Esto arregla el problema del correo)
         if ($this->request->is('post')) {
-            $this->Flash->error(__('Invalid username or password'));
+            $correo = (string)$this->request->getData('correo');
+            $password = (string)$this->request->getData('password');
+            
+            // Buscamos al usuario en la base de datos por su correo
+            $user = $this->Users->find()->where(['correo' => $correo])->first();
+            
+            // Comprobamos si el usuario existe Y si la contraseña coincide con el hash
+            if ($user && password_verify($password, $user->password)) {
+                
+                // Autenticamos forzosamente al usuario
+                $this->Authentication->setIdentity($user);
+                $this->Flash->success(__('Bienvenido a Zoigrafa'));
+                
+                return $this->redirect(['controller' => 'Productos', 'action' => 'index']);
+            } else {
+                // Si la clave o el correo fallan, mostramos el error de seguridad
+                $this->Flash->error(__('Correo o contraseña incorrectos. Acceso denegado.'));
+            }
         }
     }
 

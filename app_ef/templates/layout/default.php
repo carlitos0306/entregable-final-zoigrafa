@@ -43,15 +43,28 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             <a target="_blank" rel="noopener" href="https://api.cakephp.org/">API</a>
             
             <?php if ($identity = $this->request->getAttribute('identity')): ?>
+                
+                <?= $this->Html->link(__('Productos'), 
+                    ['controller' => 'Productos', 'action' => 'index'], 
+                    ['style' => 'margin-right: 15px; font-weight: bold;']
+                ) ?>
+
+                <?php if ($identity->get('rol') === 'admin'): ?>
+                    <?= $this->Html->link(__('Usuarios'), 
+                        ['controller' => 'Users', 'action' => 'index'], 
+                        ['style' => 'margin-right: 15px; font-weight: bold; color: #d33;']
+                    ) ?>
+                <?php endif; ?>
+
                 <span style="margin-right: 15px; font-weight: bold; color: #333; text-transform: capitalize;">
-                    ¡Hola, <?= h($identity->get('nombre') ? $identity->get('nombre') : $identity->get('correo')) ?>!
+                    ¡<?= __('Hola') ?>, <?= h($identity->nombre ?? $identity->correo) ?>!
                 </span>
                 <?= $this->Html->link(__('Cerrar Sesión'), 
                     ['controller' => 'Users', 'action' => 'logout'], 
                     ['class' => 'button', 'style' => 'background-color: #d33; border-color: #d33; color: white; padding: 5px 15px; border-radius: 4px; text-decoration: none; margin-left: 10px;']
                 ) ?>
             <?php endif; ?>
-            </div>
+        </div>
     </nav>
     <main class="main">
         <div class="container">

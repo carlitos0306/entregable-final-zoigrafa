@@ -3,9 +3,16 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Producto> $productos
  */
+
+// Detector de seguridad para saber si el usuario conectado es 'admin'
+$identity = $this->request->getAttribute('identity');
+$isAdmin = $identity && $identity->get('rol') === 'admin';
 ?>
 <div class="productos index content">
-    <?= $this->Html->link(__('Nuevo Producto'), ['action' => 'add'], ['class' => 'button float-right']) ?>
+    <?php if ($isAdmin): ?>
+        <?= $this->Html->link(__('Nuevo Producto'), ['action' => 'add'], ['class' => 'button float-right']) ?>
+    <?php endif; ?>
+    
     <h3><?= __('Catálogo de Productos - Zoigrafa') ?></h3>
 
     <div class="search-form" style="background: #f4f4f4; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
@@ -54,12 +61,15 @@
                     </td>
                     <td class="actions">
                         <?= $this->Html->link(__('Ver'), ['action' => 'view', $producto->id]) ?>
-                        <?= $this->Html->link(__('Editar'), ['action' => 'edit', $producto->id]) ?>
-                        <?= $this->Form->postLink(
-                            __('Eliminar'),
-                            ['action' => 'delete', $producto->id],
-                            ['confirm' => __('¿Estás seguro de eliminar el producto {0}?', $producto->nombre)]
-                        ) ?>
+                        
+                        <?php if ($isAdmin): ?>
+                            <?= $this->Html->link(__('Editar'), ['action' => 'edit', $producto->id]) ?>
+                            <?= $this->Form->postLink(
+                                __('Eliminar'),
+                                ['action' => 'delete', $producto->id],
+                                ['confirm' => __('¿Estás seguro de eliminar el producto {0}?', $producto->nombre)]
+                            ) ?>
+                        <?php endif; ?>
                     </td>
                 </tr>
                 <?php endforeach; ?>

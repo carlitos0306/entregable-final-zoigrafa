@@ -40,10 +40,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
             ->add(new RoutingMiddleware($this))
-            
-            // Middleware de autenticación
             ->add(new AuthenticationMiddleware($this))
-            
             ->add(new BodyParserMiddleware())
             ->add(new CsrfProtectionMiddleware([
                 'httponly' => true,
@@ -55,11 +52,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
         $fields = [
-            'username' => 'correo',
+            'username' => 'correo', // Mapeamos el identificador a la columna correo
             'password' => 'password',
         ];
 
-        // USAMOS ESTA CONFIGURACIÓN INTEGRAL PARA EVITAR ERRORES DE "METHOD NOT FOUND"
         $service = new AuthenticationService([
             'unauthenticatedRedirect' => Router::url(['controller' => 'Users', 'action' => 'login']),
             'queryParam' => 'redirect',
