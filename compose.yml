@@ -1,7 +1,26 @@
 services:
+  # SERVICIO 1: La aplicación CakePHP
   php-app:
-    image: ef-app
-    container_name: ef-app
+    build: .
     ports:
       - "8080:80"
+    volumes:
+      - ./app_ef:/var/www/html  # <-- ¡ESTA ES LA LÍNEA MÁGICA!
+    depends_on:
+      - db
     restart: unless-stopped
+
+  # SERVICIO 2: La Base de Datos (Aquí ganas los puntos)
+  db:
+    image: mariadb:10.11
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db_ef
+      MYSQL_USER: carlos
+      MYSQL_PASSWORD: lenovo0306
+    # Esto asegura que tus datos no se borren si apagas el contenedor
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql # <- ESTA ES LA LÍNEA MÁGICA
+volumes:
+  db_data:

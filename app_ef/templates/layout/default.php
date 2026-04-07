@@ -42,7 +42,10 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
             <a target="_blank" rel="noopener" href="https://book.cakephp.org/5/">Documentation</a>
             <a target="_blank" rel="noopener" href="https://api.cakephp.org/">API</a>
             
-            <?php if ($this->request->getAttribute('identity')): ?>
+            <?php if ($identity = $this->request->getAttribute('identity')): ?>
+                <span style="margin-right: 15px; font-weight: bold; color: #333; text-transform: capitalize;">
+                    ¡Hola, <?= h($identity->get('nombre') ? $identity->get('nombre') : $identity->get('correo')) ?>!
+                </span>
                 <?= $this->Html->link(__('Cerrar Sesión'), 
                     ['controller' => 'Users', 'action' => 'logout'], 
                     ['class' => 'button', 'style' => 'background-color: #d33; border-color: #d33; color: white; padding: 5px 15px; border-radius: 4px; text-decoration: none; margin-left: 10px;']
